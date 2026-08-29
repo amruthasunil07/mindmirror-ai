@@ -1,0 +1,12 @@
+[build]
+  publish = "data/app/static"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# SPA fallback — serve index.html for all unmatched routes
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

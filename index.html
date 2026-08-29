@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindMirror AI — Personal Wellness Tracker</title>
+    <meta name="description" content="Track your mood, sleep, water intake, exercise, screen time, and stress with AI-powered wellness insights. MindMirror AI helps you discover patterns and improve daily wellbeing.">
+    <meta name="theme-color" content="#0f0c29">
+
+    <!-- Favicon (emoji-based inline SVG) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪞</text></svg>">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="./css/styles.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- HEADER                                                        -->
+<!-- ============================================================ -->
+<header class="app-header" id="app-header">
+    <div class="header-inner">
+        <div class="logo">
+            <span class="logo-icon">🪞</span>
+            MindMirror AI
+        </div>
+        <button class="hamburger" aria-label="Toggle menu">☰</button>
+        <ul class="nav-tabs" id="nav-tabs">
+            <li class="nav-tab active" data-page="dashboard">
+                <span class="tab-icon">📊</span> Dashboard
+            </li>
+            <li class="nav-tab" data-page="checkin">
+                <span class="tab-icon">✏️</span> Check-in
+            </li>
+            <li class="nav-tab" data-page="trends">
+                <span class="tab-icon">📈</span> Trends
+            </li>
+            <li class="nav-tab" data-page="insights">
+                <span class="tab-icon">💡</span> Insights
+            </li>
+            <li class="nav-tab" data-page="patterns">
+                <span class="tab-icon">🔍</span> Patterns
+            </li>
+            <li class="nav-tab" data-page="report">
+                <span class="tab-icon">📋</span> Weekly Report
+            </li>
+        </ul>
+    </div>
+</header>
+
+<!-- ============================================================ -->
+<!-- MAIN CONTENT                                                  -->
+<!-- ============================================================ -->
+<main class="main-content">
+
+    <!-- ======== DASHBOARD ======== -->
+    <section class="page active" id="page-dashboard">
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-subtitle">Your wellness at a glance</p>
+
+        <div class="stats-grid" id="dashboard-stats">
+            <!-- Populated by JS -->
+        </div>
+
+        <div class="glass-card-static" id="dashboard-chart">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">Recent Trends</div>
+                    <div class="card-subtitle">Mood &amp; stress over the last 30 days</div>
+                </div>
+                <span class="card-icon">📉</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="mini-chart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== CHECK-IN ======== -->
+    <section class="page" id="page-checkin">
+        <h1 class="page-title">Daily Check-in</h1>
+        <p class="page-subtitle">How are you feeling today?</p>
+
+        <div class="glass-card-static">
+            <div class="checkin-grid">
+                <!-- Date -->
+                <div class="form-group">
+                    <label class="form-label" for="checkin-date">📅 Date</label>
+                    <input type="date" id="checkin-date">
+                </div>
+
+                <!-- Mood slider -->
+                <div class="form-group">
+                    <label class="form-label">😊 Mood (1–10)</label>
+                    <div class="slider-container">
+                        <input type="range" id="mood-slider" min="1" max="10" value="5">
+                        <span class="slider-value" id="mood-value">5</span>
+                    </div>
+                </div>
+
+                <!-- Sleep -->
+                <div class="form-group">
+                    <label class="form-label" for="sleep-input">🌙 Sleep (hours)</label>
+                    <input type="number" id="sleep-input" min="0" max="24" step="0.5" value="7" placeholder="e.g. 7.5">
+                </div>
+
+                <!-- Water Intake -->
+                <div class="form-group">
+                    <label class="form-label" for="water-input">💧 Water Intake (ml)</label>
+                    <input type="number" id="water-input" min="0" max="5000" step="50" value="1500" placeholder="e.g. 2000">
+                </div>
+
+                <!-- Exercise Duration -->
+                <div class="form-group">
+                    <label class="form-label" for="exercise-input">💪 Exercise (minutes)</label>
+                    <input type="number" id="exercise-input" min="0" max="300" step="5" value="0" placeholder="e.g. 30">
+                </div>
+
+                <!-- Screen Time -->
+                <div class="form-group">
+                    <label class="form-label" for="screen-input">📱 Screen Time (hours)</label>
+                    <input type="number" id="screen-input" min="0" max="24" step="0.5" value="2" placeholder="e.g. 4.5">
+                </div>
+
+                <!-- Stress slider -->
+                <div class="form-group">
+                    <label class="form-label">🧘 Stress (1–10)</label>
+                    <div class="slider-container">
+                        <input type="range" id="stress-slider" min="1" max="10" value="5">
+                        <span class="slider-value" id="stress-value">5</span>
+                    </div>
+                </div>
+
+                <!-- Journal -->
+                <div class="form-group full-width">
+                    <label class="form-label" for="journal-input">📝 Journal / Notes (optional)</label>
+                    <textarea id="journal-input" placeholder="How was your day? Any thoughts, wins, or challenges…"></textarea>
+                </div>
+
+                <!-- Submit -->
+                <div class="form-group full-width" style="align-items: flex-end;">
+                    <button class="btn btn-primary" id="checkin-submit">
+                        ✨ Save Check-in
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== TRENDS ======== -->
+    <section class="page" id="page-trends">
+        <h1 class="page-title">Trends</h1>
+        <p class="page-subtitle">Visualise your wellness over time</p>
+
+        <div class="glass-card-static">
+            <div class="card-header">
+                <div>
+                    <div class="card-title">Wellness Metrics</div>
+                    <div class="card-subtitle">Mood, sleep, water, exercise, screen time &amp; stress</div>
+                </div>
+                <div class="chart-controls">
+                    <button class="chart-btn trend-range-btn" data-days="7">7 days</button>
+                    <button class="chart-btn trend-range-btn active" data-days="30">30 days</button>
+                    <button class="chart-btn trend-range-btn" data-days="90">90 days</button>
+                    <button class="chart-btn trend-range-btn" data-days="365">1 year</button>
+                </div>
+            </div>
+            <div class="chart-container" id="trends-chart-container">
+                <canvas id="trends-chart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== INSIGHTS ======== -->
+    <section class="page" id="page-insights">
+        <h1 class="page-title">AI Insights</h1>
+        <p class="page-subtitle">Claude-powered wellness observations</p>
+
+        <div class="glass-card-static">
+            <div id="insights-content">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== PATTERN EXPLORER ======== -->
+    <section class="page" id="page-patterns">
+        <h1 class="page-title">Pattern Explorer</h1>
+        <p class="page-subtitle">Deep analysis of your wellness data</p>
+
+        <div class="glass-card-static">
+            <div id="patterns-content">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ======== WEEKLY REPORT ======== -->
+    <section class="page" id="page-report">
+        <h1 class="page-title">Weekly Report</h1>
+        <p class="page-subtitle">Your weekly wellness summary</p>
+
+        <div class="glass-card-static">
+            <div id="report-content">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- Toast notifications -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- Charts -->
+<script src="./js/charts.js"></script>
+<!-- App JS -->
+<script src="./js/app.js"></script>
+
+</body>
+</html>
